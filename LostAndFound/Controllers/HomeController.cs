@@ -11,10 +11,5 @@ namespace LostAndFound.Controllers
             else
                 return View();
         }
-
-        public IActionResult Privacy()
-        {
-            return View();
-        }
     }
 }
