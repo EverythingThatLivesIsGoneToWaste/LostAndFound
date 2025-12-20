@@ -1,0 +1,47 @@
+<!DOCTYPE html>
+<head>
+    <title>Admin</title>
+    <link rel="stylesheet" href="\css\common.css">
+</head>
+<body>
+    <div class="search-container">
+        <input 
+            type="text" 
+            id="searchInput" 
+            class="search-input" 
+            onkeypress="handleSearchKeypress(event)"
+        >
+        <button onclick="searchTasks()" class="search-button">
+            Search
+        </button>
+        <button onclick="openModal()" class="item-button">
+            Add
+        </button>
+    </div>
+       
+    <div id="itemModal" class="modal">
+        <div class="modal-content">
+            <span class="close" onclick="closeModal()">&times;</span>
+            <h2>Add</h2>
+            <form id="itemForm">
+                <input type="text" id="itemName" placeholder="Name" required>
+                <textarea id="InfoId" placeholder="Info"></textarea>
+                <input type="text" id="FoundAt" placeholder="Found at" required>
+    
+                <select id="RoomId" required>
+                    <option value="" disabled selected>Select room</option>
+                    <option value="room1">Room 1</option>
+                    <option value="room2">Room 2</option>
+                    <option value="room3">Room 3</option>
+                    <option value="room4">Room 4</option>
+                    <option value="room5">Room 5</option>
+                </select>
+                
+                <button type="submit">Save</button>
+            </form>
+        </div>
+    </div>
+    
+    <script src="\js\admin.js"></script>
+</body>
+</html>

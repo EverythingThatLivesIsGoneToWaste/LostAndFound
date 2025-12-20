@@ -10,10 +10,6 @@ html, body {
     box-sizing: inherit;
 }
 
-body {
-    font-family: "Arial", sans-serif; 
-}
-
 .login-container {
     display: flex;
     justify-content: center;
@@ -36,7 +32,6 @@ h2 {
     margin-bottom: 10px;
     color: #000000;
     text-align: left;
-    
 }
 
 h5 {
@@ -56,24 +51,24 @@ h5 {
 .sing-button {
     background-color: #496ad5;
     color: white;
-    padding: 12px 30px; 
+    padding: 12px 30px;
     border: none;
     border-radius: 5px;
     cursor: pointer;
     font-size: 16px;
-    margin: 20px 0 10px; 
-    width: 100%; 
+    margin: 20px 0 10px;
+    width: 100%;
     transition: background-color 0.3s;
 }
 
-.sing-button:hover {
-    background-color: #1a2753;
-}
+    .sing-button:hover {
+        background-color: #1a2753;
+    }
 
 /* стили для лейблов */
 
 .input-group {
-    margin-bottom: 20px; 
+    margin-bottom: 20px;
     text-align: left;
 }
 
@@ -86,7 +81,7 @@ label {
 }
 
 input[type="text"],
-input[type="password"] { 
+input[type="password"] {
     width: 100%;
     padding: 10px;
     border: 2px solid #ddd;
@@ -96,9 +91,9 @@ input[type="password"] {
     transition: border-color 0.3s;
 }
 
-input[type="text"]:focus,
-input[type="email"]:focus,
-input[type="password"]:focus {
-    border-color: #496ad5;
-    outline: none;
-}
+    input[type="text"]:focus,
+    input[type="email"]:focus,
+    input[type="password"]:focus {
+        border-color: #496ad5;
+        outline: none;
+    }

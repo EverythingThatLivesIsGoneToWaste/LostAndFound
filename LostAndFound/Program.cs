@@ -47,8 +47,9 @@ app.UseAuthorization();
 
 app.MapStaticAssets();
 
-using (var scope = app.Services.CreateScope())
+try
 {
+    using var scope = app.Services.CreateScope();
     var context = scope.ServiceProvider.GetRequiredService<AppDbContext>();
     var hasher = scope.ServiceProvider.GetRequiredService<IPasswordHasher>();
 
@@ -65,6 +66,10 @@ using (var scope = app.Services.CreateScope())
         context.Users.Add(admin);
         context.SaveChanges();
     }
+}
+catch (Exception ex)
+{
+    Console.WriteLine(ex.Message);
 }
 
 app.MapControllerRoute(
