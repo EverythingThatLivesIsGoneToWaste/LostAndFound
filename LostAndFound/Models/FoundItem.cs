@@ -6,7 +6,7 @@
         public string Name { get; set; } = string.Empty;
         public string Info { get; set; } = string.Empty;
         public DateTime FoundAt { get; set; }
-        public int BuildingId { get; set; }
-        public Building Building { get; set; } = null!;
+        public int RoomId { get; set; }
+        public Room Room { get; set; } = null!;
     }
 }

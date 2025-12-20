@@ -11,15 +11,16 @@
         <h2>Welcome back!</h2>
         <h5>Lost something? Find it with us.</h5>
 
-        <form method="post" asp-controller="Auth" asp-action="Login">
+        <form method="post" action="/Auth/Login">
+
             <div class="input-group">
-                <label for="inputName">Full name</label>
-                <input type="text" id="inputName" name="username" maxlength="100">
+                <label for="inputLogin">Login</label>
+                <input type="text" id="inputLogin" name="Login" maxlength="100">
             </div>
 
             <div class="input-group">
                 <label for="inputPassword">Password</label>
-                <input type="password" id="inputPassword" name="password">
+                <input type="password" id="inputPassword" name="Password">
             </div>
 
             <button type="submit" id="SingInButton" class="sing-button">Sign In</button>

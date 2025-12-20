@@ -19,7 +19,7 @@
                 _configuration = new ConfigurationBuilder()
                 .SetBasePath(Directory.GetCurrentDirectory())
                 .AddJsonFile("appsettings.json", optional: false, reloadOnChange: true)
-                .AddJsonFile($"appsettings.{Environment.GetEnvironmentVariable("DOTNET_ENVIRONMENT") ?? "Production"}.json", optional: true)
+                .AddJsonFile($"appsettings.{Environment.GetEnvironmentVariable("ASPNETCORE_ENVIRONMENT") ?? "Production"}.json", optional: true)
                 .AddEnvironmentVariables()
                 .Build();
             }
@@ -44,12 +44,16 @@
             }
         }
 
-        public static string SuperadminUsername => (_configuration
-            ?? throw new InvalidOperationException("Configuration missing")).GetValue<string>("Superadmin:Username")
-                                         ?? throw new InvalidOperationException("Username not configured");
+        public static string SuperadminLogin => (_configuration
+            ?? throw new InvalidOperationException("Configuration missing")).GetValue<string>("SuperAdmin:Login")
+                                         ?? throw new InvalidOperationException("Login not configured");
 
         public static string SuperadminPassword => (_configuration
-            ?? throw new InvalidOperationException("Configuration missing")).GetValue<string>("Superadmin:Password")
+            ?? throw new InvalidOperationException("Configuration missing")).GetValue<string>("SuperAdmin:Password")
                                          ?? throw new InvalidOperationException("Password not configured");
+
+        public static string SuperadminFullName => (_configuration
+            ?? throw new InvalidOperationException("Configuration missing")).GetValue<string>("SuperAdmin:FullName")
+                                         ?? throw new InvalidOperationException("FullName not configured");
     }
 }

@@ -1,4 +1,4 @@
-﻿namespace LostAndFound.Models
+﻿namespace LostAndFound.Enums
 {
     public enum UserRole
     {
