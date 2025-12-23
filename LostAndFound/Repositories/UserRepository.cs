@@ -1,4 +1,5 @@
 ﻿using LostAndFound.Data;
+using LostAndFound.Enums;
 using LostAndFound.Models;
 using Microsoft.EntityFrameworkCore;
 
@@ -15,7 +16,7 @@ namespace LostAndFound.Repositories
 
         public async Task AddUserAsync(User user)
         {
-            throw new NotImplementedException();
+            await _context.Users.AddAsync(user);
         }
 
         public async Task<User?> GetUserByLoginAsync(string login)
@@ -25,7 +26,12 @@ namespace LostAndFound.Repositories
 
         public async Task<bool> UserExistsAsync(string login)
         {
-            throw new NotImplementedException();
+            return await _context.Users.AnyAsync(u => u.Login == login);
+        }
+
+        public async Task<List<User>> GetUsersAsync()
+        {
+            return await _context.Users.Where(u => u.Role != UserRole.SuperAdmin).ToListAsync();
         }
     }
 }

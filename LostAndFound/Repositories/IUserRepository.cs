@@ -7,5 +7,6 @@ namespace LostAndFound.Repositories
         Task<User?> GetUserByLoginAsync(string login);
         Task AddUserAsync(User user);
         Task<bool> UserExistsAsync(string login);
+        Task<List<User>> GetUsersAsync();
     }
 }

@@ -6,10 +6,7 @@ namespace LostAndFound.Controllers
     {
         public IActionResult Index()
         {
-            if (User.Identity.IsAuthenticated)
-                return View(); //TODO Authorized user
-            else
-                return View();
+            return View();
         }
     }
 }
