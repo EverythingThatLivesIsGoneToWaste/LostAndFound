@@ -1,5 +1,40 @@
-﻿@*
-    For more information on enabling MVC for empty projects, visit https://go.microsoft.com/fwlink/?LinkID=397860
-*@
-@{
-}
+﻿<!DOCTYPE html>
+<head>
+    <title>SuperAdmin</title>
+    <link rel="stylesheet" href="\css\common.css">
+</head>
+<body>
+    <div class="search-container">
+        <input type="text"
+               id="searchInput"
+               class="search-input"
+               onkeypress="handleSearchKeypress(event)">
+        <button onclick="searchUsers()" class="search-button">
+            Search
+        </button>
+        <button onclick="openModal()" class="item-button">
+            Add user
+        </button>
+    </div>
+
+    <div id="itemModal" class="modal">
+        <div class="modal-content">
+            <span class="close" onclick="closeModal()">&times;</span>
+            <form id="itemForm">
+                <input type="text" id="Login" placeholder="Login" required>
+                <input type="text" id="FullName" placeholder="Full name" required>
+                <input type="text" id="Password" placeholder="Password" required>
+                <select id="Role" required>
+                    <option value="" disabled selected>Role</option>
+                    <option value="admin">Admin</option>
+                    <option value="user">User</option>
+                </select>
+
+                <button type="submit">Save</button>
+            </form>
+        </div>
+    </div>
+
+    <script src="\js\superAdmin.js"></script>
+</body>
+</html>
