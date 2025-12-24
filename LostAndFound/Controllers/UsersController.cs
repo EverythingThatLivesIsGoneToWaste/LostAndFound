@@ -1,50 +1,114 @@
-﻿using Microsoft.AspNetCore.Authorization;
+﻿using LostAndFound.DTOs;
+using LostAndFound.Exceptions;
+using LostAndFound.Repositories;
+using LostAndFound.Services;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
 namespace LostAndFound.Controllers
 {
+    [ApiController]
+    [Route("api/[controller]")]
     [Authorize(Roles = "SuperAdmin")]
-    public class UsersController : Controller
+    public class UsersController : ControllerBase
     {
-        // GET: Users/GetUsers
-        public ActionResult GetUsers()
+        private readonly IUserRepository _userRepository;
+        private readonly IUserService _userService;
+        private readonly ILogger<UsersController> _logger;
+
+        public UsersController(IUserRepository userRepository, 
+            IUserService userService, 
+            ILogger<UsersController> logger)
         {
-            // TODO
-            return View();
+            _userRepository = userRepository;
+            _userService = userService;
+            _logger = logger;
         }
 
-        // POST: Users/CreateUser (form)
+        // GET: users
+        [HttpGet]
+        public async Task<ActionResult<IEnumerable<UserDto>>> GetAllUsers()
+        {
+            try
+            {
+                var users = await _userRepository.GetUsersAsync();
+                var userDtos = users.Select(u => new UserDto
+                {
+                    Id = u.Id,
+                    Login = u.Login,
+                    FullName = u.FullName,
+                    Role = u.Role
+                }).ToList();
+
+                return Ok(userDtos);
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError(ex, "Error getting users");
+                return StatusCode(500, new { error = "Internal server error" });
+            }
+        }
+
+        // GET: users/[int]
+        [HttpGet("{id:int}")]
+        public async Task<ActionResult<UserDto>> GetUser(int id)
+        {
+            try
+            {
+                var user = await _userService.GetUserByIdAsync(id);
+                return Ok(user);
+            }
+            catch (NotFoundException ex)
+            {
+                return NotFound(new { error = ex.Message });
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError(ex, "Error getting user {UserId}", id);
+                return StatusCode(500, new { error = "Internal server error" });
+            }
+        }
+
+        // POST: users
         [HttpPost]
-        [ValidateAntiForgeryToken]
-        public ActionResult CreateUser(/*UserModel model DTO*/)
+        public async Task<ActionResult> CreateUser([FromForm] CreateUserDto model)
         {
             if (!ModelState.IsValid)
-                return View(/*model*/);
+                return BadRequest(ModelState);
 
-            // TODO
             try
             {
-                return RedirectToAction(nameof(Index));
+                var user = await _userService.AddUserAsync(model);
+                return CreatedAtAction(nameof(GetUser), new { id = user.Id }, user);
             }
-            catch
+            catch (AlreadyExistsException ex)
             {
-                return View();
+                return Conflict(new { error = ex.Message });
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError(ex, "Error creating user");
+                return StatusCode(500, new { error = "Internal server error" });
             }
         }
 
-        // POST: Users/DeleteUser/5
-        [HttpPost]
-        [ValidateAntiForgeryToken]
-        public ActionResult DeleteUser(int id)
+        // DELETE: users/[int]
+        [HttpDelete("{id}")]
+        public async Task<IActionResult> DeleteUser(int id)
         {
-            // TODO
             try
             {
-                return RedirectToAction(nameof(Index));
+                await _userService.RemoveUserAsync(id);
+                return NoContent();
             }
-            catch
+            catch (NotFoundException ex)
             {
-                return View();
+                return NotFound(new { error = ex.Message });
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError(ex, "Error deleting user {UserId}", id);
+                return StatusCode(500, new { error = "Internal server error" });
             }
         }
     }

@@ -2,7 +2,7 @@
 
 namespace LostAndFound.DTOs
 {
-    public class LoginModel
+    public class LoginDto
     {
         [Required]
         public string Login { get; set; } = string.Empty;

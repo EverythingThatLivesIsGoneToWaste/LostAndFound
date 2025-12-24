@@ -52,6 +52,7 @@ namespace LostAndFound.Data
                 entity.HasKey(e => e.Id);
 
                 entity.Property(e => e.Name).IsRequired().HasMaxLength(150);
+                entity.HasIndex(e => e.Name).IsUnique();
 
                 entity.Property(e => e.Description).HasMaxLength(150);
 

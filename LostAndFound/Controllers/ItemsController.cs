@@ -1,50 +1,124 @@
-﻿using Microsoft.AspNetCore.Authorization;
+﻿using LostAndFound.DTOs;
+using LostAndFound.Exceptions;
+using LostAndFound.Repositories;
+using LostAndFound.Services;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
 namespace LostAndFound.Controllers
 {
-    [Authorize(Roles = "User, Admin")]
-    public class ItemsController : Controller
+    [ApiController]
+    [Route("api/[controller]")]
+    [Authorize]
+    public class ItemsController : ControllerBase
     {
-        // GET: Items/GetItems
-        public ActionResult GetItems()
+        private readonly IItemRepository _itemRepository;
+        private readonly IItemService _itemService;
+        private readonly ILogger<ItemsController> _logger;
+
+        public ItemsController(IItemRepository itemRepository,
+            IItemService itemService,
+            ILogger<ItemsController> logger)
         {
-            // TODO
-            return View();
+            _itemRepository = itemRepository;
+            _itemService = itemService;
+            _logger = logger;
         }
 
-        // POST: Items/CreateItem (form)
+        // GET: items
+        [HttpGet]
+        [Authorize(Roles = "User, Admin")]
+        public async Task<ActionResult> GetItems([FromQuery] FilterItemsDto filter)
+        {
+            try
+            {
+                var items = await _itemRepository.GetItemsAsync(
+                    fromDate: filter.FromDate,
+                    toDate: filter.ToDate,
+                    searchTerm: filter.Search,
+                    roomId: filter.RoomId);
+
+                var itemDtos = items.Select(i => new ItemDto
+                {
+                    Id = i.Id,
+                    Name = i.Name,
+                    Info = i.Info,
+                    FoundAt = i.FoundAt,
+                    RoomId = i.RoomId
+                }).ToList();
+
+                return Ok(itemDtos);
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError(ex, "Error getting items");
+                return StatusCode(500, new { error = "Internal server error" });
+            }
+        }
+
+        // GET: items/[int]
+        [HttpGet("{id:int}")]
+        [Authorize(Roles = "User, Admin")]
+        public async Task<ActionResult<ItemDto>> GetItem(int id)
+        {
+            try
+            {
+                var item = await _itemService.GetItemByIdAsync(id);
+                return Ok(item);
+            }
+            catch (NotFoundException ex)
+            {
+                return NotFound(new { error = ex.Message });
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError(ex, "Error getting item {ItemId}", id);
+                return StatusCode(500, new { error = "Internal server error" });
+            }
+        }
+
+        // POST: items
         [HttpPost]
-        [ValidateAntiForgeryToken]
-        public ActionResult CreateItem(/*ItemModel model DTO*/)
+        [Authorize(Roles = "Admin")]
+        public async Task<ActionResult> CreateItem([FromQuery] CreateItemDto model)
         {
             if (!ModelState.IsValid)
-                return View(/*model*/);
+                return BadRequest(ModelState);
 
-            // TODO
             try
             {
-                return RedirectToAction(nameof(Index));
+                var item = await _itemService.AddItemAsync(model);
+                return CreatedAtAction(nameof(GetItem), new { id = item.Id }, item);
             }
-            catch
+            catch (NotFoundException ex)
             {
-                return View();
+                return NotFound(new { error = ex.Message });
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError(ex, "Error creating item");
+                return StatusCode(500, new { error = "Internal server error" });
             }
         }
 
-        // POST: Items/DeleteItem/[int]
-        [HttpPost]
-        [ValidateAntiForgeryToken]
-        public ActionResult DeleteItem(int id)
+        // DELETE: items/[int]
+        [HttpDelete("{id}")]
+        [Authorize(Roles = "Admin")]
+        public async Task<IActionResult> DeleteItem(int id)
         {
-            // TODO
             try
             {
-                return RedirectToAction(nameof(Index));
+                await _itemService.RemoveItemAsync(id);
+                return NoContent();
             }
-            catch
+            catch (NotFoundException ex)
             {
-                return View();
+                return NotFound(new { error = ex.Message });
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError(ex, "Error deleting item {ItemId}", id);
+                return StatusCode(500, new { error = "Internal server error" });
             }
         }
     }

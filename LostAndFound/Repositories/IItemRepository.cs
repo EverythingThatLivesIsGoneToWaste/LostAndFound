@@ -4,9 +4,13 @@ namespace LostAndFound.Repositories
 {
     public interface IItemRepository
     {
-        Task<FoundItem?> GetItemByNameAsync(string name);
+        Task<FoundItem?> GetItemByIdAsync(int id);
         Task AddItemAsync(FoundItem item);
-        Task<bool> ItemExistsAsync(int id);
-        Task<List<User>> GetItemsAsync();
+        Task<List<FoundItem>> GetItemsAsync(
+            DateTime? fromDate = null,
+            DateTime? toDate = null,
+            string? searchTerm = null,
+            int? roomId = null);
+        Task RemoveItemAsync(FoundItem item);
     }
 }

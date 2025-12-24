@@ -21,7 +21,7 @@ namespace LostAndFound.Controllers
         }
 
         [HttpPost]
-        public async Task<IActionResult> Login(LoginModel model)
+        public async Task<IActionResult> Login(LoginDto model)
         {
             if (!ModelState.IsValid)
                 return View(model);
