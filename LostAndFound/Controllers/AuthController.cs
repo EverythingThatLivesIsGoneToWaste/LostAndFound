@@ -1,41 +1,76 @@
 ﻿using LostAndFound.DTOs;
+using LostAndFound.Exceptions;
 using LostAndFound.Services;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
 namespace LostAndFound.Controllers
 {
-    [AllowAnonymous]
     public class AuthController : Controller
     {
-        public IActionResult Login()
-        {
-            return View();
-        }
-
         private readonly IAuthService _authService;
+        private readonly ILogger<AuthController> _logger;
 
-        public AuthController(IAuthService authService)
+        public AuthController(
+            IAuthService authService,
+            ILogger<AuthController> logger)
         {
             _authService = authService;
+            _logger = logger;
         }
 
+        [AllowAnonymous]
+        [HttpGet]
+        public IActionResult Login()
+        {
+            return View(new LoginDto());
+        }
+
+        [AllowAnonymous]
         [HttpPost]
+        //[ValidateAntiForgeryToken]
         public async Task<IActionResult> Login(LoginDto model)
         {
             if (!ModelState.IsValid)
                 return View(model);
 
-            var user = await _authService.AuthenticateAsync(model.Login, model.Password);
-
-            if (user != null)
+            try
             {
-                await _authService.SignInAsync(user);
+                var user = await _authService.AuthenticateAsync(model.Login, model.Password);
+                await _authService.LoginAsync(user);
+
+                _logger.LogInformation("User {Login} logged in", user.Login);
+
                 return RedirectToAction("Index", "Dashboard");
             }
+            catch (UnauthorizedException ex)
+            {
+                _logger.LogWarning("Failed login attempt for {Login}", model.Login);
+                ModelState.AddModelError(string.Empty, ex.Message);
+                return View(model);
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError(ex, "Error during login for {Login}", model.Login);
+                ModelState.AddModelError(string.Empty, "Internal server error");
+                return View(model);
+            }
+        }
 
-            ModelState.AddModelError(string.Empty, "Неверный логин или пароль");
-            return View(model);
+        [Authorize]
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public async Task<IActionResult> Logout()
+        {
+            await _authService.LogoutAsync();
+            return RedirectToAction("Index", "Home");
+        }
+
+        [Authorize]
+        [HttpGet("access-denied")]
+        public IActionResult AccessDenied()
+        {
+            return View();
         }
     }
 }

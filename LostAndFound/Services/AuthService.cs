@@ -1,5 +1,6 @@
 ﻿using LostAndFound.Models;
 using LostAndFound.Repositories;
+using LostAndFound.Exceptions;
 using Microsoft.AspNetCore.Authentication;
 using Microsoft.AspNetCore.Authentication.Cookies;
 using Microsoft.AspNetCore.Identity;
@@ -26,35 +27,13 @@ namespace LostAndFound.Services
         public async Task<User?> AuthenticateAsync(string login, string password)
         {
             var user = await _userRepository.GetUserByLoginAsync(login);
-            if (user == null) return null;
-
-            bool isPasswordValid = _passwordHasher.VerifyPassword(user.Password, password);
-            if (!isPasswordValid) return null;
+            if (user == null || !_passwordHasher.VerifyPassword(user.Password, password))
+                throw new UnauthorizedException("Invalid login or password");
 
             return user;
         }
 
-        public int? GetCurrentUserId()
-        {
-            int? result;
-
-            if (int.TryParse(_httpContextAccessor.HttpContext?.User?.FindFirst(ClaimTypes.NameIdentifier)?.Value, out int parsedValue))
-            {
-                result = parsedValue;
-            }
-            else
-            {
-                result = null;
-            }
-            return result; 
-        }
-
-        public bool IsAuthenticated()
-        {
-            throw new NotImplementedException();
-        }
-
-        public async Task SignInAsync(User user)
+        public async Task LoginAsync(User user)
         {
             var claims = new List<Claim>
             {
@@ -69,13 +48,19 @@ namespace LostAndFound.Services
 
             await _httpContextAccessor.HttpContext.SignInAsync(
                 CookieAuthenticationDefaults.AuthenticationScheme,
-                principal
+                principal, 
+                new AuthenticationProperties
+                {
+                    IsPersistent = true,
+                    ExpiresUtc = DateTime.UtcNow.AddDays(7)
+                }
             );
         }
 
-        public async Task SignOutAsync()
+        public async Task LogoutAsync()
         {
-            throw new NotImplementedException();
+            await _httpContextAccessor.HttpContext.SignOutAsync(
+                CookieAuthenticationDefaults.AuthenticationScheme);
         }
     }
 }
