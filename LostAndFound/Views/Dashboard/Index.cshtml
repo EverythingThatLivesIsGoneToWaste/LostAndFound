@@ -15,15 +15,15 @@
 }
  *@
 
-@{
+@* @{
     ViewData["Title"] = "Панель управления";
     Layout = "~/Views/Shared/_Layout.cshtml";
-}
+} *@
 
 <link rel="stylesheet" href="\css\common.css">
 
 <div class="dashboard-container">
-    <div class="dashboard-header">
+    @* <div class="dashboard-header">
         <h1>Lost&Found - Панель управления</h1>
         <div class="user-role-badge">
             @if (User.IsInRole("SuperAdmin") || User.IsInRole("Admin"))
@@ -35,7 +35,7 @@
                 <span class="badge badge-user">Пользователь</span>
             }
         </div>
-    </div>
+    </div> *@
 
     @if (User.IsInRole("SuperAdmin"))
     {
