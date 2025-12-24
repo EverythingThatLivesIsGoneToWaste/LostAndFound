@@ -1,4 +1,5 @@
 ﻿<!DOCTYPE html>
+<html lang="en">
 <head>
     <title>SuperAdmin</title>
     <link rel="stylesheet" href="\css\common.css">
@@ -17,14 +18,17 @@
         </button>
     </div>
 
+    <div id="usersContainer" class="users-container">
+        <p class="no-users">Loading users...</p>
+    </div>
+
     <div id="itemModal" class="modal">
         <div class="modal-content">
-            <span class="close" onclick="closeModal()">&times;</span>
-            <form id="itemForm">
-                <input type="text" id="Login" placeholder="Login" required>
-                <input type="text" id="FullName" placeholder="Full name" required>
-                <input type="text" id="Password" placeholder="Password" required>
-                <select id="Role" required>
+            <form id="itemForm" method="post" asp-controller="Users" asp-action="CreateUser">
+                <input type="text" id="Login" name="Login" placeholder="Login" required>
+                <input type="text" id="FullName" name="FullName" placeholder="Full name" required>
+                <input type="password" id="Password" name="Password" placeholder="Password" required>
+                <select id="Role" name="Role" required>
                     <option value="" disabled selected>Role</option>
                     <option value="admin">Admin</option>
                     <option value="user">User</option>

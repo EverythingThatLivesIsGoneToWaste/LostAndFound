@@ -22,11 +22,15 @@
     <div id="itemModal" class="modal">
         <div class="modal-content">
             <span class="close" onclick="closeModal()">&times;</span>
-            <h2>Add</h2>
-            <form id="itemForm">
+            <form id="itemForm" method="post" asp-controller="Items" asp-action="CreateItem">
                 <input type="text" id="itemName" placeholder="Name" required>
                 <textarea id="InfoId" placeholder="Info"></textarea>
-                <input type="text" id="FoundAt" placeholder="Found at" required>
+
+                <select id="BuildingId" required>
+                    <option value="" disabled selected>Select building</option>
+                    <option value="room1">Building 1</option>
+                    <option value="room2">Building 2</option>
+                </select>
     
                 <select id="RoomId" required>
                     <option value="" disabled selected>Select room</option>

@@ -120,8 +120,8 @@
     background: #45a049;
 }
 
-/* стили для отображения вещей */
-.task-item {
+/* стили для отображения вещей и юзеров*/
+.user-item {
     border: 1px solid #e0e0e0;
     padding: 15px;
     margin: 10px 0;
@@ -130,21 +130,21 @@
     box-shadow: 0 2px 4px rgba(0,0,0,0.1);
 }
 
-.task-item h3 {
+.user-item h3 {
      margin: 0 0 8px 0;
      color: #333;
 }
 
-.task-item p {
+.user-item p {
     margin: 5px 0;
    color: #666;
 }
 
-.task-item small {
+.user-item small {
    color: #888;
  }
 
-.task-item button {
+.user-item button {
     margin-top: 10px;
 }
 
