@@ -37,7 +37,21 @@ document.addEventListener('DOMContentLoaded', function() {
     });
 });
 
+document.addEventListener('DOMContentLoaded', function () {
+    console.log('DOM полностью загружен!');
+    loadUsers();
+});
+
 async function loadUsers() {
+
+    const container = document.getElementById('usersContainer');
+    console.log('usersContainer:', document.getElementById('usersContainer'));
+    console.log('Контейнер найден:', container);
+
+    if (container) {
+        container.innerHTML = '<p class="no-users">Loading users...</p>';
+    }
+
     try {
         const response = await fetch('/api/users', {
             method: 'GET',
@@ -48,6 +62,7 @@ async function loadUsers() {
 
         if (response.ok) {
             const users = await response.json();
+            console.log('Загружено пользователей:', users.length);
             displayUsers(users);
         } else {
             console.error('Failed to load users');
@@ -71,7 +86,10 @@ function displayUsers(users) {
         container.innerHTML = '<p class="no-users">No users found</p>';
         return;
     }
-    users.forEach(user => {
+    const sortedUsers = users.sort((a, b) => b.id - a.id);
+
+    sortedUsers.forEach((user, index) => {
+        console.log(`Создаю карточку ${index + 1}:`, user);
         const userCard = createUserCard(user);
         container.appendChild(userCard);
     });
@@ -79,12 +97,21 @@ function displayUsers(users) {
 
 function createUserCard(user) {
     const card = document.createElement('div');
-    card.className = 'user-item'; 
+    card.className = 'user-card';
+    card.id = `user-${user.id}`;
+
+    // Простейшее получение данных
+    const login = user.login || user["login"] || "No login";
+    const fullName = user.fullName || login;
+    const role = user.role || "@";
+
+    // Просто отображаем роль как есть
+    const roleDisplay = String(role);
 
     card.innerHTML = `
-        <h3>${user.fullName}</h3>
-        <p><strong>Login:</strong> ${user.login}</p>
-        <p><strong>Role:</strong> ${roleFormatted}</p>
+        <h2>${fullName}</h2>
+        <p><strong>Login:</strong> ${login}</p>
+        <p><strong>Role:</strong> ${roleDisplay}</p>
         <p><strong>ID:</strong> ${user.id}</p>
         <small>Created: ${new Date().toLocaleDateString()}</small>
         <div class="user-actions">
@@ -95,6 +122,7 @@ function createUserCard(user) {
 
     return card;
 }
+
 
 //todo
 async function deleteUser(userId) {

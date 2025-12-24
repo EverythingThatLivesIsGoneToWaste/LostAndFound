@@ -121,83 +121,66 @@
 }
 
 /* стили для отображения вещей и юзеров*/
-.user-item {
-    border: 1px solid #e0e0e0;
+
+.users-list {
+    max-width: 800px;
+    margin: 20px auto 100px auto;
+    padding: 0 20px;
+    max-height: 70vh; 
+    overflow-y: auto;
+}
+
+
+.user-card {
+    border: 2px solid #ddd;
+    border-radius: 8px;
     padding: 15px;
-    margin: 10px 0;
-    border-radius: 8px;
-    background: white;
-    box-shadow: 0 2px 4px rgba(0,0,0,0.1);
-}
-
-.user-item h3 {
-     margin: 0 0 8px 0;
-     color: #333;
-}
-
-.user-item p {
-    margin: 5px 0;
-   color: #666;
-}
-
-.user-item small {
-   color: #888;
- }
-
-.user-item button {
-    margin-top: 10px;
-}
-
-.calendar {
-    display: none;
-    background: white;
-    border: 1px solid #ccc;
-    border-radius: 8px;
-    padding: 10px;
-    box-shadow: 0 2px 10px rgba(0,0,0,0.1);
-    z-index: 1001;
-    position: absolute;
-}
-
-.calendar-grid {
-    display: grid;
-    grid-template-columns: repeat(7, 1fr);
-    gap: 5px;
-    margin-top: 10px;
-}
-
-.calendar-day {
-    width: 30px;
-    height: 30px;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    border-radius: 50%;
-    cursor: pointer;
-}
-
-.calendar-day:hover {
-    background: #f0f0f0;
-}
-
-select {
-    padding: 12px;
-    border: 1px solid #ddd;
-    border-radius: 6px;
-    font-size: 16px;
-    background-color: white;
-    cursor: pointer;
-    width: 100%;
-    box-sizing: border-box;
     margin-bottom: 15px;
+    background: white;
 }
 
-select:focus {
-    outline: none;
-    border-color: #4dabf7;
-    box-shadow: 0 0 0 2px rgba(77, 171, 247, 0.2);
+    .user-card h4 {
+        margin: 0 0 10px 0;
+        color: #333;
+        font-size: 16px;
+    }
+
+
+    .user-card p {
+        margin: 5px 0;
+        color: #666;
+        font-size: 14px;
+    }
+
+/* Кнопки */
+.card-buttons {
+    margin-top: 15px;
+    display: flex;
+    gap: 10px;
 }
 
-select option {
-    padding: 10px;
+    .card-buttons button {
+        padding: 6px 12px;
+        border: none;
+        border-radius: 4px;
+        cursor: pointer;
+        font-size: 13px;
+    }
+
+.edit-btn {
+    background-color: #2196F3;
+    color: white;
+}
+
+.delete-btn {
+    background-color: #f44336;
+    color: white;
+}
+
+/* Загрузка/нет данных */
+.loading, .no-data {
+    text-align: center;
+    padding: 40px;
+    color: #666;
+    font-style: italic;
 }
