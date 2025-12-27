@@ -43,7 +43,7 @@ namespace LostAndFound.Controllers
                     Id = i.Id,
                     Name = i.Name,
                     Info = i.Info,
-                    FoundAt = i.FoundAt,
+                    FoundAtUtc = i.FoundAtUtc.ToLocalTime(),
                     RoomId = i.RoomId
                 }).ToList();
 
@@ -69,11 +69,11 @@ namespace LostAndFound.Controllers
                     Id = item.Id,
                     Name = item.Name,
                     Info = item.Info,
-                    FoundAt = item.FoundAt,
+                    FoundAtUtc = item.FoundAtUtc.ToLocalTime(),
                     RoomId = item.RoomId
                 };
 
-                return Ok(item);
+                return Ok(itemDto);
             }
             catch (NotFoundException ex)
             {
@@ -98,6 +98,10 @@ namespace LostAndFound.Controllers
             {
                 var item = await _itemService.AddItemAsync(model);
                 return CreatedAtAction(nameof(GetItem), new { id = item.Id }, item);
+            }
+            catch (ValidationException ex)
+            {
+                return BadRequest(new { error = ex.Message });
             }
             catch (NotFoundException ex)
             {

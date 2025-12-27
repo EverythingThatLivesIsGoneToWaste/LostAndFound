@@ -23,8 +23,11 @@ namespace LostAndFound.Services
 
         public async Task<ItemDto> AddItemAsync(CreateItemDto itemDto)
         {
+            if (itemDto.FoundAtUtc > DateTime.UtcNow)
+                throw new ValidationException("Date cannot be in the future");
+
             var dateUtc = DateTime.SpecifyKind(
-                itemDto.FoundAt,
+                itemDto.FoundAtUtc,
                 DateTimeKind.Utc
                 );
 
@@ -35,7 +38,7 @@ namespace LostAndFound.Services
             {
                 Name = itemDto.Name,
                 Info = itemDto.Info,
-                FoundAt = dateUtc,
+                FoundAtUtc = dateUtc,
                 Room = room
             };
 
@@ -47,7 +50,7 @@ namespace LostAndFound.Services
                 Id = item.Id,
                 Name = item.Name,
                 Info = item.Info,
-                FoundAt = item.FoundAt,
+                FoundAtUtc = item.FoundAtUtc,
                 RoomId = item.RoomId
             };
         }

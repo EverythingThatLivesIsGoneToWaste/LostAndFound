@@ -10,7 +10,7 @@ namespace LostAndFound.DTOs
         [Required]
         public string Info { get; set; } = string.Empty;
         [Required]
-        public DateTime FoundAt { get; set; }
+        public DateTime FoundAtUtc { get; set; }
         [Required]
         public int RoomId { get; set; }
     }

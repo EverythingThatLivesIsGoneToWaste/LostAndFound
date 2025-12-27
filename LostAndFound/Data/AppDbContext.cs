@@ -40,7 +40,7 @@ namespace LostAndFound.Data
 
                 entity.Property(e => e.Info).IsRequired().HasMaxLength(150);
 
-                entity.Property(e => e.FoundAt).IsRequired();
+                entity.Property(e => e.FoundAtUtc).IsRequired();
             });
 
             modelBuilder.Entity<Room>(entity =>

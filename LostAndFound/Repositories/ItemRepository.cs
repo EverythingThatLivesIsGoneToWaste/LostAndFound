@@ -32,10 +32,10 @@ namespace LostAndFound.Repositories
             var query = _context.FoundItems.AsQueryable();
 
             if (fromDate.HasValue)
-                query = query.Where(i => i.FoundAt >= fromDate.Value);
+                query = query.Where(i => i.FoundAtUtc >= fromDate.Value);
 
             if (toDate.HasValue)
-                query = query.Where(i => i.FoundAt <= toDate.Value);
+                query = query.Where(i => i.FoundAtUtc <= toDate.Value);
 
             if (!string.IsNullOrEmpty(searchTerm))
                 query = query.Where(i =>
