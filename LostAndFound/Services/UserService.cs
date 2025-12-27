@@ -20,17 +20,18 @@ namespace LostAndFound.Services
             _passwordHasher = passwordHasher;
             _logger = logger;
         }
-        public async Task<User> AddUserAsync(CreateUserDto model)
+        public async Task<User> AddUserAsync(CreateUserDto userDto)
         {
-            if (await _userRepository.UserExistsAsync(model.Login))
-                throw new AlreadyExistsException($"User '{model.Login}' already exists");
+            if (await _userRepository.UserExistsAsync(userDto.Login))
+                throw new AlreadyExistsException($"User '{userDto.Login}' already exists");
 
             var user = new User
             {
-                Login = model.Login,
-                FullName = model.FullName,
-                Password = _passwordHasher.HashPassword(model.Password),
-                Role = model.Role,
+                Login = userDto.Login,
+                FullName = userDto.FullName,
+                Password = _passwordHasher.HashPassword(userDto.Password),
+                Role = userDto.Role,
+                CreatedAtUtc = DateTime.UtcNow
             };
 
             await _userRepository.AddUserAsync(user);

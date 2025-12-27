@@ -21,20 +21,20 @@ namespace LostAndFound.Services
             _logger = logger;
         }
 
-        public async Task<ItemDto> AddItemAsync(CreateItemDto model)
+        public async Task<ItemDto> AddItemAsync(CreateItemDto itemDto)
         {
             var dateUtc = DateTime.SpecifyKind(
-                model.FoundAt,
+                itemDto.FoundAt,
                 DateTimeKind.Utc
                 );
 
-            var room = await _roomRepository.GetRoomByIdAsync(model.RoomId)
-                ?? throw new NotFoundException($"Room with id {model.RoomId} not found");
+            var room = await _roomRepository.GetRoomByIdAsync(itemDto.RoomId)
+                ?? throw new NotFoundException($"Room with id {itemDto.RoomId} not found");
 
             var item = new FoundItem
             {
-                Name = model.Name,
-                Info = model.Info,
+                Name = itemDto.Name,
+                Info = itemDto.Info,
                 FoundAt = dateUtc,
                 Room = room
             };

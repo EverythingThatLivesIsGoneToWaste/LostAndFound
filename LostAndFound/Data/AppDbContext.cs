@@ -25,6 +25,11 @@ namespace LostAndFound.Data
                 entity.Property(e => e.Password).IsRequired().HasMaxLength(100);
 
                 entity.Property(e => e.Role).IsRequired().HasMaxLength(20).HasConversion<string>();
+
+                entity.Property(e => e.CreatedAtUtc)
+                .IsRequired()
+                .HasDefaultValueSql("CURRENT_TIMESTAMP")
+                .ValueGeneratedOnAdd();
             });
 
             modelBuilder.Entity<FoundItem>(entity =>

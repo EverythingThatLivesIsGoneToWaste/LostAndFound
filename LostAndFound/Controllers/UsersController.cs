@@ -38,6 +38,7 @@ namespace LostAndFound.Controllers
                     Login = u.Login,
                     FullName = u.FullName,
                     Role = u.Role.ToString(),
+                    CreatedAtUtc = u.CreatedAtUtc.ToLocalTime()
                 }).ToList();
 
                 return Ok(userDtos);
@@ -61,7 +62,8 @@ namespace LostAndFound.Controllers
                     Id = user.Id,
                     Login = user.Login,
                     FullName = user.FullName,
-                    Role = user.Role.ToString()
+                    Role = user.Role.ToString(),
+                    CreatedAtUtc = user.CreatedAtUtc.ToLocalTime()
                 };
 
                 return Ok(userDto);
