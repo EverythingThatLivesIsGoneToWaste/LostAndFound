@@ -25,7 +25,6 @@ function closeModal() {
     }
 }
 
-// Закрытие при клике вне окна
 document.addEventListener('DOMContentLoaded', function() {
     
     window.addEventListener('click', function(event) {
@@ -42,6 +41,7 @@ document.addEventListener('DOMContentLoaded', function () {
     loadUsers();
 });
 
+//загрузка юзеров
 async function loadUsers() {
 
     const container = document.getElementById('usersContainer');
@@ -72,6 +72,7 @@ async function loadUsers() {
     }
 }
 
+
 function displayUsers(users) {
     const container = document.getElementById('usersContainer');
 
@@ -100,14 +101,14 @@ function createUserCard(user) {
     card.className = 'user-card';
     card.id = `user-${user.id}`;
 
-    // Простейшее получение данных
+    //для обработки @ почему-то получает json??
     const login = user.login || user["login"] || "No login";
     const fullName = user.fullName || login;
     const role = user.role || "@";
 
-    // Просто отображаем роль как есть
     const roleDisplay = String(role);
 
+    //карточка юзера
     card.innerHTML = `
         <h2>${fullName}</h2>
         <p><strong>Login:</strong> ${login}</p>
@@ -115,7 +116,6 @@ function createUserCard(user) {
         <p><strong>ID:</strong> ${user.id}</p>
         <small>Created: ${new Date().toLocaleDateString()}</small>
         <div class="user-actions">
-            <button onclick="editUser(${user.id})" class="edit-btn">Edit</button>
             <button onclick="deleteUser(${user.id})" class="delete-btn">Delete</button>
         </div>
     `;
@@ -123,54 +123,75 @@ function createUserCard(user) {
     return card;
 }
 
+async function createUser() {
+    const login = document.getElementById('Login').value;
+    const fullName = document.getElementById('FullName').value;
+    const password = document.getElementById('Password').value;
+    const role = document.getElementById('Role').value;
 
-//todo
-async function deleteUser(userId) {
+    if (!login || !fullName || !password || !role) {
+        alert('Please fill all fields');
+        return; 
+    }
+
+    try {
+        const formData = new FormData();
+        formData.append('Login', login);
+        formData.append('FullName', fullName);
+        formData.append('Password', password);
+        formData.append('Role', role);
+
+        const response = await fetch('/api/users', {
+            method: 'POST',
+            body: new URLSearchParams(formData),
+            headers: {
+                'Accept': 'application/json'
+            }
+        });
+
+        if (response.status === 201) {
+            const result = await response.json();
+            closeModal();
+            document.getElementById('itemForm').reset();
+            loadUsers(); 
+        } else {
+            const error = await response.json();
+            alert(`Error: ${error.error || 'Failed to create user'}`);
+        }
+    } catch (error) {
+        console.error('Error:', error);
+        alert('Network error. Please try again.');
+    }
 }
 
-//function setupForm() {
-//    const form = document.getElementById('itemForm');
-//    if (!form) return;
+async function deleteUser(userId) {
+    if (!confirm('Delete this user?')) {
+        return;
+    }
 
-//    form.addEventListener('submit', async function (e) {
-//        e.preventDefault();
+    try {
+        const response = await fetch(`/api/users/${userId}`, {
+            method: 'DELETE'
+        });
 
-//        // Собираем данные из формы
-//        const formData = new FormData(this);
+        if (response.status === 204) {
+            const userCard = document.getElementById(`user-${userId}`);
+            if (userCard) {
+                userCard.remove();
+            }
 
-//        try {
-//            // Отправляем POST запрос
-//            const response = await fetch('/api/users', {
-//                method: 'POST',
-//                body: new URLSearchParams(formData), // Это создаст application/x-www-form-urlencoded
-//                headers: {
-//                    // Если нужен anti-forgery token, раскомментируйте:
-//                    // 'RequestVerificationToken': document.querySelector('input[name="__RequestVerificationToken"]').value
-//                }
-//            });
+            alert('User deleted successfully!');
+            loadUsers();
+        } else {
+            const error = await response.json();
+            alert(`Error: ${error.error || 'Failed to delete user'}`);
+        }
 
-//            if (response.status === 201) { // 201 Created
-//                const result = await response.json();
-//                alert(`User created successfully! ID: ${result.id}`);
-//                closeModal();
-//                form.reset();
+    } catch (error) {
+        console.error('Delete error:', error);
+        alert('Network error. Please try again.');
+    }
+}
 
-//                // Обновляем список пользователей, если есть такая функция
-//                if (typeof searchUsers === 'function') {
-//                    searchUsers();
-//                }
-//            } else {
-//                const error = await response.json();
-//                alert(`Error: ${error.error || 'Unknown error'}`);
-//            }
-//        } catch (error) {
-//            console.error('Error:', error);
-//            alert('Network error. Please try again.');
-//        }
-//    });
-//}
-
-//// Вызываем при загрузке страницы
-//document.addEventListener('DOMContentLoaded', setupForm);
 
 

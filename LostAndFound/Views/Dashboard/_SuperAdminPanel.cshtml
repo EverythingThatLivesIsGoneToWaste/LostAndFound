@@ -24,7 +24,7 @@
 
     <div id="itemModal" class="modal">
         <div class="modal-content">
-            <form id="itemForm" method="post" asp-controller="Users" asp-action="CreateUser">
+            <form id="itemForm">
                 <input type="text" id="Login" name="Login" placeholder="Login" required>
                 <input type="text" id="FullName" name="FullName" placeholder="Full name" required>
                 <input type="password" id="Password" name="Password" placeholder="Password" required>
@@ -34,7 +34,7 @@
                     <option value="user">User</option>
                 </select>
 
-                <button type="submit">Save</button>
+                <button type="button" onclick="createUser()">Save</button>
             </form>
         </div>
     </div>
