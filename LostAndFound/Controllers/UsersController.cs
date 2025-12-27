@@ -37,7 +37,7 @@ namespace LostAndFound.Controllers
                     Id = u.Id,
                     Login = u.Login,
                     FullName = u.FullName,
-                    Role = u.Role
+                    Role = u.Role.ToString(),
                 }).ToList();
 
                 return Ok(userDtos);
@@ -56,7 +56,15 @@ namespace LostAndFound.Controllers
             try
             {
                 var user = await _userService.GetUserByIdAsync(id);
-                return Ok(user);
+                var userDto = new UserDto
+                {
+                    Id = user.Id,
+                    Login = user.Login,
+                    FullName = user.FullName,
+                    Role = user.Role.ToString()
+                };
+
+                return Ok(userDto);
             }
             catch (NotFoundException ex)
             {

@@ -64,6 +64,15 @@ namespace LostAndFound.Controllers
             try
             {
                 var item = await _itemService.GetItemByIdAsync(id);
+                var itemDto = new ItemDto
+                {
+                    Id = item.Id,
+                    Name = item.Name,
+                    Info = item.Info,
+                    FoundAt = item.FoundAt,
+                    RoomId = item.RoomId
+                };
+
                 return Ok(item);
             }
             catch (NotFoundException ex)

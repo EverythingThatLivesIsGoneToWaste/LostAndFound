@@ -35,13 +35,7 @@ namespace LostAndFound.Controllers
                     Id = b.Id,
                     Name = b.Name,
                     Description = b.Description,
-                    Address = b.Address,
-                    Rooms = [.. b.Rooms.Select(r => new RoomDto
-                    {
-                        Id = r.Id,
-                        Name = r.Name,
-                        Floor = r.Floor
-                    })]
+                    Address = b.Address
                 }).ToList();
 
                 return Ok(buildingDtos);
@@ -53,6 +47,7 @@ namespace LostAndFound.Controllers
             }
         }
 
+        // GET: buildings/[int]/rooms
         [HttpGet("{id:int}/rooms")]
         public async Task<ActionResult<IEnumerable<RoomDto>>> GetBuildingRooms(int id)
         {
