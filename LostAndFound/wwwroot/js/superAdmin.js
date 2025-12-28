@@ -41,6 +41,8 @@ document.addEventListener('DOMContentLoaded', function () {
     loadUsers();
 });
 
+let allUsers = [];
+
 //загрузка юзеров
 async function loadUsers() {
 
@@ -62,6 +64,7 @@ async function loadUsers() {
 
         if (response.ok) {
             const users = await response.json();
+            allUsers = users;
             console.log('Загружено пользователей:', users.length);
             displayUsers(users);
         } else {
@@ -71,7 +74,6 @@ async function loadUsers() {
         console.error('Error loading users:', error);
     }
 }
-
 
 function displayUsers(users) {
     const container = document.getElementById('usersContainer');
@@ -152,7 +154,7 @@ async function createUser() {
         if (response.status === 201) {
             const result = await response.json();
             closeModal();
-            document.getElementById('itemForm').reset();
+            allUsers.unshift(result);
             loadUsers(); 
         } else {
             const error = await response.json();
@@ -181,6 +183,7 @@ async function deleteUser(userId) {
             }
 
             alert('User deleted successfully!');
+            allUsers = allUsers.filter(user => user.id !== userId);
             loadUsers();
         } else {
             const error = await response.json();
@@ -193,5 +196,35 @@ async function deleteUser(userId) {
     }
 }
 
+function searchUsers() {
+    const searchInput = document.getElementById('searchInput');
+    const searchText = searchInput.value.toLowerCase().trim();
+
+    if (!searchText) {
+        displayUsers(allUsers);
+        return;
+    }
+
+    // фильтр по полям
+    const filteredUsers = allUsers.filter(user => {
+        const login = (user.login || user["1ogin"] || "").toLowerCase();
+        const fullName = (user.fullName || "").toLowerCase();
+        const role = String(user.role || "").toLowerCase();
+        const id = String(user.id || "");
+
+        return login.includes(searchText) ||
+            fullName.includes(searchText) ||
+            role.includes(searchText) ||
+            id.includes(searchText);
+    });
+
+    displayUsers(filteredUsers);
+}
+
+function handleSearchKeypress(event) {
+    if (event.key === 'Enter') {
+        searchUsers();
+    }
+}
 
 
