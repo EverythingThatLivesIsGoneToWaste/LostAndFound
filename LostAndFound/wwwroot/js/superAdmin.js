@@ -107,15 +107,24 @@ function createUserCard(user) {
     const fullName = user.fullName || login;
     const role = user.role || "@";
 
-    const roleDisplay = String(role);
+    const creationDate =
+        new Intl.DateTimeFormat('ru-RU', {
+            year: 'numeric',
+            month: '2-digit',
+            day: '2-digit',
+            hour: '2-digit',
+            minute: '2-digit',
+            hour12: false
+        }).format(new Date(user.createdAtUtc));
+    
 
     //карточка юзера
     card.innerHTML = `
         <h2>${fullName}</h2>
         <p><strong>Login:</strong> ${login}</p>
-        <p><strong>Role:</strong> ${roleDisplay}</p>
+        <p><strong>Role:</strong> ${role}</p>
         <p><strong>ID:</strong> ${user.id}</p>
-        <small>Created: ${new Date().toLocaleDateString()}</small>
+        <small>Created: ${creationDate}</small>
         <div class="user-actions">
             <button onclick="deleteUser(${user.id})" class="delete-btn">Delete</button>
         </div>

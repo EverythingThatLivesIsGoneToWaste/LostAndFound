@@ -279,8 +279,13 @@ async function createItem() {
     const info = document.getElementById('Info').value;
     const roomId = document.getElementById('RoomId').value;
     
-    if (!name || !roomId) {
-        alert('Please fill name and select room');
+    if (!roomId) {
+        alert('Please select room');
+        return;
+    }
+
+    if (!name || !info) {
+        alert('Please fill all fields');
         return;
     }
     
@@ -291,6 +296,7 @@ async function createItem() {
         
         if (response.status === 201) {
             const result = await response.json();
+
             allItems.unshift(result);
             const roomExists = allRooms.some(r => r.id == roomId);
             if (!roomExists) {
@@ -312,9 +318,8 @@ async function createItem() {
 
                 console.log('Room added to allRooms:', allRooms[allRooms.length - 1]);
             }
-            allItems.unshift(result);
-            closeModal();
 
+            closeModal();
             displayItems(allItems);
 
         } else {
