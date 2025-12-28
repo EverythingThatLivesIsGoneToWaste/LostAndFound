@@ -103,7 +103,6 @@ function createUserCard(user) {
     card.className = 'user-card';
     card.id = `user-${user.id}`;
 
-    //для обработки @ почему-то получает json??
     const login = user.login || user["login"] || "No login";
     const fullName = user.fullName || login;
     const role = user.role || "@";

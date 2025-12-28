@@ -5,47 +5,42 @@
 </head>
 <body>
     <div class="search-container">
-        <input 
-            type="text" 
-            id="searchInput" 
-            class="search-input" 
-            onkeypress="handleSearchKeypress(event)"
-        >
-        <button onclick="searchTasks()" class="search-button">
+        <input type="text"
+               id="searchInput"
+               class="search-input"
+               onkeypress="handleSearchKeypress(event)">
+        <button onclick="searchItems()" class="search-button">
             Search
         </button>
         <button onclick="openModal()" class="item-button">
             Add
         </button>
     </div>
-       
+
+    <div id="itemsContainer" class="users-list">
+        <p class="no-users">Loading items...</p>
+    </div>
+
     <div id="itemModal" class="modal">
         <div class="modal-content">
             <span class="close" onclick="closeModal()">&times;</span>
-            <form id="itemForm" method="post" asp-controller="Items" asp-action="CreateItem">
-                <input type="text" id="itemName" placeholder="Name" required>
-                <textarea id="InfoId" placeholder="Info"></textarea>
+            <form id="itemForm">
+                <input type="text" id="Name" placeholder="Name" required>
+                <textarea id="Info" placeholder="Info"></textarea>
 
                 <select id="BuildingId" required>
-                    <option value="" disabled selected>Select building</option>
-                    <option value="room1">Building 1</option>
-                    <option value="room2">Building 2</option>
+                    <option value="" disabled selected>Loading buildings...</option>
                 </select>
-    
-                <select id="RoomId" required>
-                    <option value="" disabled selected>Select room</option>
-                    <option value="room1">Room 1</option>
-                    <option value="room2">Room 2</option>
-                    <option value="room3">Room 3</option>
-                    <option value="room4">Room 4</option>
-                    <option value="room5">Room 5</option>
+
+                <select id="RoomId" required disabled>
+                    <option value="" disabled selected>Select building first</option>
                 </select>
-                
-                <button type="submit">Save</button>
+
+                <button type="button" onclick="createItem()">Save</button>
             </form>
         </div>
     </div>
-    
+
     <script src="\js\admin.js"></script>
 </body>
 </html>

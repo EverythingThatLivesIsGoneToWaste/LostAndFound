@@ -96,24 +96,17 @@
    resize: vertical;
 }
 
-#itemForm button[type="submit"] {
-     padding: 12px 24px;
-     background: #4CAF50;
-     color: white;
-     border: none;
-     border-radius: 8px;
-     font-size: 16px;
-     cursor: pointer;
-     align-self: center;
-     min-width: 120px;
- }
-
-#taskForm button[type="submit"]:hover {
-    background: #45a049;
+#itemForm button {
+        padding: 10px 20px;
+        background: #4CAF50;
+        color: white;
+        border: none;
+        border-radius: 5px;
+        cursor: pointer;
+        font-size: 16px;
 }
 
 /* стили для отображения вещей и юзеров*/
-
 .users-list {
 /*    max-width: 800px;*/
     margin: 20px auto 100px auto;
