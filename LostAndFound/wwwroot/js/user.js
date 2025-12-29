@@ -109,13 +109,15 @@ function createItemCard(item) {
     card.className = 'user-card';
     card.id = `item-${item.id}`;
 
-    const foundDate = new Date(item.foundAtUtc).toLocaleString('ru-RU', {
-        year: 'numeric',
-        month: 'long',
-        day: 'numeric',
-        hour: '2-digit',
-        minute: '2-digit'
-    });
+    const foundAt =
+        new Intl.DateTimeFormat('ru-RU', {
+            year: 'numeric',
+            month: '2-digit',
+            day: '2-digit',
+            hour: '2-digit',
+            minute: '2-digit',
+            hour12: false
+        }).format(new Date(item.foundAtUtc));
 
     const itemName = item.name || item.Name || "Unnamed Item";
     const itemInfo = item.info || item.Info || "No description";
@@ -137,7 +139,7 @@ function createItemCard(item) {
         <h2>${itemName}</h2>
         <p><strong>Description:</strong> ${itemInfo}</p>
         <p><strong>Found in:</strong> ${locationInfo}</p>
-        <p><strong>Found at:</strong> ${foundDate}</p>
+        <p><strong>Found at:</strong> ${foundAt}</p>
     `;
 
     return card;
